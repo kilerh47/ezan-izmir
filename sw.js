@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ezan-izmir-cache-v1';
+const CACHE_NAME = 'ezan-izmir-cache-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -33,24 +33,39 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - Cache-first with network fallback
+// Fetch event - Network First for HTML, Cache First for others
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
+  if (event.request.url.includes('api.aladhan.com')) return;
 
-  // Let Aladhan API requests bypass the service worker caching,
-  // since the app handles API caching inside localStorage natively for 1-month window.
-  if (event.request.url.includes('api.aladhan.com')) {
+  // For HTML navigation requests, use Network First, fallback to cache
+  // This ensures the user ALWAYS gets the latest UI when they refresh.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          return caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        })
+        .catch(() => caches.match(event.request))
+    );
     return;
   }
 
+  // Cache First for other assets with stale-while-revalidate for fonts
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
+        if (event.request.url.includes('fonts.googleapis.com') || event.request.url.includes('fonts.gstatic.com')) {
+           fetch(event.request).then(res => {
+             caches.open(CACHE_NAME).then(cache => cache.put(event.request, res));
+           }).catch(()=>{});
+        }
         return cachedResponse;
       }
       return fetch(event.request).then((networkResponse) => {
-        // Cache Google Fonts dynamcially for offline support of premium typography
         if (event.request.url.includes('fonts.googleapis.com') || event.request.url.includes('fonts.gstatic.com')) {
           return caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, networkResponse.clone());
@@ -58,11 +73,6 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return networkResponse;
-      }).catch(() => {
-        // Offline fallback if not in cache and network fails
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
       });
     })
   );
