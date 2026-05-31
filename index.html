@@ -47,7 +47,8 @@
       background: radial-gradient(circle at 50% 50%, var(--theme-color-3) 0%, var(--theme-color-2) 55%, var(--theme-color-1) 100%);
       transition: --theme-color-1 2000ms ease, --theme-color-2 2000ms ease, --theme-color-3 2000ms ease;
       -webkit-font-smoothing: antialiased;
-      overflow: hidden;
+      overflow-y: auto;
+      min-height: 100dvh;
       user-select: none;
     }
 
@@ -121,13 +122,13 @@
     }
   </style>
 </head>
-<body class="h-full w-full text-slate-100 flex flex-col justify-between items-center relative overflow-hidden select-none safe-area-pt safe-area-pb p-6">
+<body class="min-h-[100dvh] w-full text-slate-100 flex flex-col justify-between items-center relative overflow-y-auto select-none safe-area-pt safe-area-pb p-4 md:p-6 gap-6">
 
   <!-- Ambient background mesh -->
   <div class="floating-mesh"></div>
 
   <!-- HEADER -->
-  <header class="w-full max-w-4xl flex flex-col items-center text-center z-10 select-none pointer-events-none">
+  <header class="w-full max-w-4xl flex flex-col items-center text-center z-10 select-none pointer-events-auto">
     <div class="flex items-center gap-3">
       <!-- Modern minimalist golden mosque/hilal SVG logo -->
       <svg class="w-10 h-10 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -153,43 +154,50 @@
         <span class="mx-2 text-amber-500/50">•</span>
         <span id="hijri-date" class="text-amber-300/80">-- ------ ----</span>
       </div>
+      <!-- Modern minimalist install button, floats in the header -->
+      <button id="install-btn" class="hidden glass-panel px-4 py-1.5 rounded-full text-xs font-bold tracking-wider text-amber-400 border border-amber-500/30 flex items-center gap-2 hover:bg-amber-400/10 active:scale-95 transition-all mt-2.5 pointer-events-auto">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+        </svg>
+        UYGULAMAYI YÜKLE
+      </button>
     </div>
   </header>
 
   <!-- MAIN COUNTDOWN CARD -->
-  <main class="w-full max-w-2xl z-10 flex flex-col justify-center my-auto py-4 select-none">
-    <div id="countdown-card" class="glass-panel rounded-3xl p-8 md:p-10 flex flex-col items-center text-center transition-all duration-700 relative overflow-hidden select-none" style="animation: pulse-glow 5s infinite ease-in-out;">
+  <main class="w-full max-w-2xl z-10 flex flex-col justify-center my-4 md:my-auto py-2 select-none">
+    <div id="countdown-card" class="glass-panel rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 flex flex-col items-center text-center transition-all duration-700 relative overflow-hidden select-none" style="animation: pulse-glow 5s infinite ease-in-out;">
       
       <!-- Tiny active glow in background -->
       <div class="absolute inset-0 bg-radial from-amber-500/5 via-transparent to-transparent pointer-events-none"></div>
 
       <!-- Upcoming Prayer Name Label -->
-      <h2 id="upcoming-prayer-label" class="text-amber-400 text-lg md:text-xl font-bold tracking-[0.3em] uppercase drop-shadow-sm outfit-font mb-4">
+      <h2 id="upcoming-prayer-label" class="text-amber-400 text-base md:text-xl font-bold tracking-[0.3em] uppercase drop-shadow-sm outfit-font mb-4">
         -- EZANINA KALAN SÜRE
       </h2>
 
       <!-- Large Countdown Counter -->
-      <div id="countdown-timer" class="flex justify-center items-center gap-4 md:gap-6 outfit-font font-extrabold text-slate-100 select-none">
+      <div id="countdown-timer" class="flex justify-center items-center gap-2.5 sm:gap-4 md:gap-6 outfit-font font-extrabold text-slate-100 select-none">
         <div class="flex flex-col items-center">
-          <span id="hour-value" class="text-5xl md:text-7xl lg:text-8xl tracking-normal tabular-nums leading-none">00</span>
-          <span class="text-[10px] md:text-xs tracking-[0.2em] font-medium text-slate-400 uppercase mt-2.5">SAAT</span>
+          <span id="hour-value" class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-normal tabular-nums leading-none">00</span>
+          <span class="text-[9px] md:text-xs tracking-[0.2em] font-medium text-slate-400 uppercase mt-2.5">SAAT</span>
         </div>
-        <span class="text-4xl md:text-6xl text-amber-400/70 font-light pb-6">:</span>
+        <span class="text-3xl md:text-6xl text-amber-400/70 font-light pb-4 md:pb-6">:</span>
         <div class="flex flex-col items-center">
-          <span id="minute-value" class="text-5xl md:text-7xl lg:text-8xl tracking-normal tabular-nums leading-none">00</span>
-          <span class="text-[10px] md:text-xs tracking-[0.2em] font-medium text-slate-400 uppercase mt-2.5">DAKİKA</span>
+          <span id="minute-value" class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-normal tabular-nums leading-none">00</span>
+          <span class="text-[9px] md:text-xs tracking-[0.2em] font-medium text-slate-400 uppercase mt-2.5">DAKİKA</span>
         </div>
-        <span class="text-4xl md:text-6xl text-amber-400/70 font-light pb-6">:</span>
+        <span class="text-3xl md:text-6xl text-amber-400/70 font-light pb-4 md:pb-6">:</span>
         <div class="flex flex-col items-center">
-          <span id="second-value" class="text-5xl md:text-7xl lg:text-8xl tracking-normal tabular-nums leading-none text-amber-400">00</span>
-          <span class="text-[10px] md:text-xs tracking-[0.2em] font-bold text-amber-400/70 uppercase mt-2.5">SANİYE</span>
+          <span id="second-value" class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-normal tabular-nums leading-none text-amber-400">00</span>
+          <span class="text-[9px] md:text-xs tracking-[0.2em] font-bold text-amber-400/70 uppercase mt-2.5">SANİYE</span>
         </div>
       </div>
 
       <!-- Target time display -->
-      <div class="mt-6 md:mt-8 px-5 py-2 rounded-full bg-white/5 border border-white/5 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-        <span id="target-prayer-info" class="text-sm md:text-base font-semibold tracking-wide text-slate-300 outfit-font">
+      <div class="mt-5 md:mt-8 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-white/5 border border-white/5 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <span id="target-prayer-info" class="text-xs sm:text-base font-semibold tracking-wide text-slate-300 outfit-font">
           Vakit Ezanı --:--
         </span>
       </div>
@@ -197,75 +205,75 @@
   </main>
 
   <!-- PRAYER TIMES BOTTOM GRID -->
-  <footer class="w-full max-w-4xl z-10 select-none">
+  <footer class="w-full max-w-4xl z-10 select-none mt-auto">
     <!-- Mobile: 3x2 Grid, Desktop: 6x1 Row -->
-    <div id="prayer-grid" class="grid grid-cols-3 lg:grid-cols-6 gap-3.5 md:gap-4 select-none">
+    <div id="prayer-grid" class="grid grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3.5 md:gap-4 select-none">
       
       <!-- İMSAK -->
-      <div id="card-Imsak" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
+      <div id="card-Imsak" class="glass-panel rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
         <span id="active-badge-Imsak" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 active-pulse-dot hidden"></span>
         <!-- Minimal Sunrise SVG Icon -->
-        <svg class="w-8 h-8 text-amber-400/90 mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-7 h-7 md:w-8 md:h-8 text-amber-400/90 mb-1.5 md:mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M6.34 17.66l2.83-2.83M14.83 9.17l2.83-2.83"/>
           <circle cx="12" cy="12" r="4" fill="currentColor" fill-opacity="0.1"/>
         </svg>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">İMSAK</span>
-        <span id="time-Imsak" class="text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
+        <span class="text-[9px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">İMSAK</span>
+        <span id="time-Imsak" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
       </div>
 
       <!-- GÜNEŞ -->
-      <div id="card-Gunes" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
+      <div id="card-Gunes" class="glass-panel rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
         <span id="active-badge-Gunes" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 active-pulse-dot hidden"></span>
-        <svg class="w-8 h-8 text-amber-400/90 mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-7 h-7 md:w-8 md:h-8 text-amber-400/90 mb-1.5 md:mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 18h20M17 14l-5-5-5 5M12 9v9"/>
           <path d="M12 4c2.5 0 4 2 4 4v1H8V8c0-2 1.5-4 4-4z" fill="currentColor" fill-opacity="0.1"/>
         </svg>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">GÜNEŞ</span>
-        <span id="time-Gunes" class="text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
+        <span class="text-[9px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">GÜNEŞ</span>
+        <span id="time-Gunes" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
       </div>
 
       <!-- ÖĞLE -->
-      <div id="card-Ogle" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
+      <div id="card-Ogle" class="glass-panel rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
         <span id="active-badge-Ogle" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 active-pulse-dot hidden"></span>
-        <svg class="w-8 h-8 text-amber-400/90 mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-7 h-7 md:w-8 md:h-8 text-amber-400/90 mb-1.5 md:mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5" fill="currentColor" fill-opacity="0.1"/>
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l1.41-1.41M17.66 6.34l1.41 1.41"/>
         </svg>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">ÖĞLE</span>
-        <span id="time-Ogle" class="text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
+        <span class="text-[9px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">ÖĞLE</span>
+        <span id="time-Ogle" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
       </div>
 
       <!-- İKİNDİ -->
-      <div id="card-Ikindi" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
+      <div id="card-Ikindi" class="glass-panel rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
         <span id="active-badge-Ikindi" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 active-pulse-dot hidden"></span>
-        <svg class="w-8 h-8 text-amber-400/90 mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-7 h-7 md:w-8 md:h-8 text-amber-400/90 mb-1.5 md:mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5" fill="currentColor" fill-opacity="0.1"/>
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l1.41-1.41M17.66 6.34l1.41 1.41M9 15l6-6"/>
         </svg>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">İKİNDİ</span>
-        <span id="time-Ikindi" class="text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
+        <span class="text-[9px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">İKİNDİ</span>
+        <span id="time-Ikindi" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
       </div>
 
       <!-- AKŞAM -->
-      <div id="card-Aksam" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
+      <div id="card-Aksam" class="glass-panel rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
         <span id="active-badge-Aksam" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 active-pulse-dot hidden"></span>
-        <svg class="w-8 h-8 text-amber-400/90 mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-7 h-7 md:w-8 md:h-8 text-amber-400/90 mb-1.5 md:mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 18h20M12 9v9M17 13l-5 5-5-5"/>
           <path d="M12 4c2.5 0 4 2 4 4v1H8V8c0-2 1.5-4 4-4z" fill="currentColor" fill-opacity="0.1"/>
         </svg>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">AKŞAM</span>
-        <span id="time-Aksam" class="text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
+        <span class="text-[9px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">AKŞAM</span>
+        <span id="time-Aksam" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
       </div>
 
       <!-- YATSI -->
-      <div id="card-Yatsi" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
+      <div id="card-Yatsi" class="glass-panel rounded-xl sm:rounded-2xl p-2.5 sm:p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 relative select-none">
         <span id="active-badge-Yatsi" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 active-pulse-dot hidden"></span>
-        <svg class="w-8 h-8 text-amber-400/90 mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-7 h-7 md:w-8 md:h-8 text-amber-400/90 mb-1.5 md:mb-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" fill="currentColor" fill-opacity="0.1"/>
           <circle cx="18" cy="5" r="1" fill="currentColor"/>
         </svg>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">YATSI</span>
-        <span id="time-Yatsi" class="text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
+        <span class="text-[9px] md:text-xs font-bold tracking-widest text-slate-400 uppercase">YATSI</span>
+        <span id="time-Yatsi" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-200 mt-1 outfit-font">--:--</span>
       </div>
 
     </div>
@@ -724,6 +732,48 @@
           .catch(err => console.error('Service Worker registration failed: ', err));
       });
     }
+
+    // -------------------------------------------------------------
+    // PWA INSTALLATION PROMPT CONTROLLER
+    // -------------------------------------------------------------
+    let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the default browser-specific automatic install bar
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      deferredPrompt = e;
+      // Show our premium glassmorphic install button
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+        installBtn.classList.add('flex'); // override hidden
+      }
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        // Show the prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User installation choice: ${outcome}`);
+        // We've used the prompt, clear it
+        deferredPrompt = null;
+        // Hide the install button
+        installBtn.classList.add('hidden');
+        installBtn.classList.remove('flex');
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      console.log('Ezan İzmir was installed successfully.');
+      if (installBtn) {
+        installBtn.classList.add('hidden');
+        installBtn.classList.remove('flex');
+      }
+    });
 
     // -------------------------------------------------------------
     // SCREEN WAKE LOCK API (Prevents screen sleep)
