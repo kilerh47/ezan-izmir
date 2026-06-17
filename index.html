@@ -64,9 +64,9 @@
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Prevent scrolling */
+      overflow-y: auto;
+      overflow-x: hidden;
       user-select: none;
-      touch-action: none;
     }
     .outfit-font { font-family: 'Outfit', sans-serif; }
 
@@ -497,6 +497,13 @@
         update();
         intervalId = setInterval(update, 1000);
       });
+      
+      // Register Service Worker for PWA
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => console.log('Service Worker registered:', registration))
+          .catch(error => console.log('Service Worker registration failed:', error));
+      }
     });
   </script>
 </body>
