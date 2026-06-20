@@ -165,6 +165,18 @@
 </head>
 <body class="safe-area-pt safe-area-pb">
 
+  <!-- Offline Overlay -->
+  <div id="offline-overlay" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-center" style="background: var(--bg-bot); backdrop-filter: blur(10px);">
+    <div class="glass-panel p-8 rounded-2xl max-w-sm flex flex-col items-center">
+      <svg class="w-16 h-16 mb-4" style="color: var(--accent)" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+      <h2 class="text-big font-bold mb-2 outfit-font" style="color: var(--text-main)">İnternet Bağlantısı Gerekli</h2>
+      <p class="text-med mb-6" style="color: var(--text-muted)">Bugüne ait ezan vakitleri henüz güncellenmedi. Lütfen güncel saatleri alabilmek için internet bağlantınızı açıp ekranı yenileyin.</p>
+      <button onclick="window.location.reload()" class="w-full py-3 rounded-xl font-bold transition-transform active:scale-95" style="background: var(--accent); color: white;">Yenile</button>
+    </div>
+  </div>
+
   <!-- Watermark -->
   <svg class="izmir-bg" viewBox="0 0 200 600" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
     <path d="M80,600 L80,200 L70,200 L70,180 L80,180 L80,150 L100,100 L120,150 L120,180 L130,180 L130,200 L120,200 L120,600 Z" fill="currentColor"/>
@@ -287,27 +299,66 @@
       return d;
     }
 
-    function calculateHijri(date) {
-      const m = ["Muharrem","Sefer","Rebiülevvel","Rebiülahır","Cemaziyelevvel","Cemaziyelahır","Recep","Şaban","Ramazan","Şevval","Zilkade","Zilhicce"];
-      return `${date.getDate()} ${m[date.getMonth()]} 1447`; 
-    }
-
     async function loadData() {
       const realNow = new Date();
-      currentTimes = { Imsak: "03:45", Gunes: "05:42", Ogle: "13:15", Ikindi: "17:10", Aksam: "20:40", Yatsi: "22:20" };
-      hijriStr = calculateHijri(realNow);
+      const fDay = `${String(realNow.getDate()).padStart(2,'0')}-${String(realNow.getMonth()+1).padStart(2,'0')}-${realNow.getFullYear()}`;
       
+      let needsFetch = true;
       try {
         const stored = localStorage.getItem('ezanIzmirTimingsV2');
         if(stored) {
           const parsed = JSON.parse(stored);
-          const fDay = `${String(realNow.getDate()).padStart(2,'0')}-${String(realNow.getMonth()+1).padStart(2,'0')}-${realNow.getFullYear()}`;
           if(parsed[fDay]) {
             currentTimes = parsed[fDay];
             if(currentTimes.hijri) hijriStr = currentTimes.hijri;
+            needsFetch = false;
           }
         }
       } catch(e){}
+
+      if (needsFetch) {
+        try {
+          const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Izmir&country=Turkey&method=13');
+          if (!res.ok) throw new Error("Network response was not ok");
+          const json = await res.json();
+          const t = json.data.timings;
+          
+          currentTimes = {
+            Imsak: t.Fajr,
+            Gunes: t.Sunrise,
+            Ogle: t.Dhuhr,
+            Ikindi: t.Asr,
+            Aksam: t.Maghrib,
+            Yatsi: t.Isha
+          };
+          
+          // Format hijri using Turkish transliteration map roughly corresponding to Aladhan's En transliteration
+          const h = json.data.date.hijri;
+          const trMonths = {
+            "Muharram": "Muharrem", "Safar": "Safer", "Rabi' al-Awwal": "Rebiülevvel",
+            "Rabi' al-Thani": "Rebiülahir", "Jumada al-Ula": "Cemaziyelevvel",
+            "Jumada al-Akhirah": "Cemaziyelahir", "Rajab": "Recep", "Sha'ban": "Şaban",
+            "Ramadan": "Ramazan", "Shawwal": "Şevval", "Dhu al-Qi'dah": "Zilkade",
+            "Dhu al-Hijjah": "Zilhicce", "Muḥarram": "Muharrem" // Aladhan sometimes uses unicode
+          };
+          const trMonth = trMonths[h.month.en] || h.month.en;
+          hijriStr = `${h.day} ${trMonth} ${h.year}`;
+          currentTimes.hijri = hijriStr;
+          
+          // Save to localStorage
+          try {
+            const stored = JSON.parse(localStorage.getItem('ezanIzmirTimingsV2') || "{}");
+            stored[fDay] = currentTimes;
+            localStorage.setItem('ezanIzmirTimingsV2', JSON.stringify(stored));
+          } catch(e){}
+          
+        } catch(err) {
+          // Fetch failed (likely offline).
+          document.getElementById('offline-overlay').classList.remove('hidden');
+          document.getElementById('offline-overlay').classList.add('flex');
+          return; // Stop initialization
+        }
+      }
 
       document.getElementById('hijri-date').textContent = hijriStr;
       document.getElementById('gregorian-date').textContent = `${realNow.getDate()} ${["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"][realNow.getMonth()]} ${realNow.getFullYear()}`;
