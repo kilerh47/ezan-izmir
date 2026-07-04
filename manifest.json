@@ -1,7 +1,7 @@
 {
-  "name": "Ezan İzmir",
-  "short_name": "Ezan İzmir",
-  "description": "Sadece İzmir ezan vakitlerini gösteren, modern ve estetik PWA uygulaması.",
+  "name": "Ezan Vakitleri",
+  "short_name": "Ezan",
+  "description": "Türkiye geneli ezan vakitleri — sade, hızlı ve offline çalışan PWA.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",

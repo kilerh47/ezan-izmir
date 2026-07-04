@@ -1,4 +1,11 @@
-const CACHE_NAME = 'ezan-izmir-cache-v2';
+const CACHE_NAME = 'ezan-vakitleri-cache-v3';
+
+// Allow the page to force this SW to activate immediately (update banner)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 const ASSETS = [
   './',
   './index.html',
@@ -36,10 +43,10 @@ self.addEventListener('activate', (event) => {
 // Fetch event - Network First for HTML, Cache First for others
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Always let aladhan API requests go through the network directly
   if (event.request.url.includes('api.aladhan.com')) return;
 
-  // For HTML navigation requests, use Network First, fallback to cache
-  // This ensures the user ALWAYS gets the latest UI when they refresh.
+  // Network First for HTML navigation (ensures latest UI on refresh)
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
@@ -54,14 +61,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache First for other assets with stale-while-revalidate for fonts
+  // Cache First for other assets (fonts: stale-while-revalidate)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         if (event.request.url.includes('fonts.googleapis.com') || event.request.url.includes('fonts.gstatic.com')) {
-           fetch(event.request).then(res => {
-             caches.open(CACHE_NAME).then(cache => cache.put(event.request, res));
-           }).catch(()=>{});
+          fetch(event.request).then(res => {
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, res));
+          }).catch(() => {});
         }
         return cachedResponse;
       }

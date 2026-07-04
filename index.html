@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Ezan İzmir - Premium</title>
+  <title>Ezan Vakitleri</title>
   
   <meta name="theme-color" content="#f8fafc">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Ezan İzmir">
+  <meta name="apple-mobile-web-app-title" content="Ezan Vakitleri">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
@@ -26,7 +26,7 @@
       --bg-top: #f8fafc;
       --bg-mid: #f1f5f9;
       --bg-bot: #e2e8f0;
-      --accent: #ea580c; /* Orange/Sun */
+      --accent: #ea580c;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --glass-bg: rgba(255, 255, 255, 0.45);
@@ -36,13 +36,15 @@
       --watermark: rgba(15, 23, 42, 0.04);
       --node-fill: #ffffff;
       --node-stroke: rgba(0,0,0,0.1);
+      --sheet-bg: rgba(248, 250, 252, 0.96);
+      --input-bg: rgba(226, 232, 240, 0.6);
     }
     
     [data-theme="dark"] {
       --bg-top: #0f172a;
       --bg-mid: #1e293b;
       --bg-bot: #020617;
-      --accent: #38bdf8; /* Blue/Moon */
+      --accent: #38bdf8;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --glass-bg: rgba(15, 23, 42, 0.45);
@@ -52,6 +54,8 @@
       --watermark: rgba(255, 255, 255, 0.02);
       --node-fill: #1e293b;
       --node-stroke: rgba(255,255,255,0.2);
+      --sheet-bg: rgba(15, 23, 42, 0.98);
+      --input-bg: rgba(30, 41, 59, 0.8);
     }
 
     body {
@@ -70,20 +74,20 @@
     }
     .outfit-font { font-family: 'Outfit', sans-serif; }
 
-    /* Izmir Clock Tower Silhouette Watermark */
-    .izmir-bg {
+    /* Mosque Watermark */
+    .mosque-bg {
       position: absolute;
       bottom: 0;
-      right: -10%;
-      height: 60vh;
-      opacity: 1; /* Opacity handled by variable */
+      right: -5%;
+      height: 58vh;
+      opacity: 1;
       color: var(--watermark);
       pointer-events: none;
-      filter: blur(1px);
+      filter: blur(0.8px);
       transition: color 0.5s ease;
     }
 
-    /* Glassmorphism Classes */
+    /* Glassmorphism */
     .glass-panel {
       background: var(--glass-bg);
       backdrop-filter: blur(24px);
@@ -100,7 +104,7 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* SVG ARC SYSTEM */
+    /* SVG Arc */
     .svg-arc-wrapper {
       position: relative;
       width: 100%;
@@ -111,10 +115,9 @@
     }
     .arc-svg {
       width: 100%;
-      max-width: 380px; /* Constraints for massive screens */
+      max-width: 380px;
       overflow: visible;
     }
-    
     .node-circle {
       fill: var(--node-fill);
       stroke: var(--node-stroke);
@@ -128,12 +131,11 @@
       r: 4.5;
       filter: drop-shadow(0 0 4px var(--accent));
     }
-    
     #sun-wrapper {
-      transition: transform 0.1s linear; /* Smooth real-time tracking */
+      transition: transform 0.1s linear;
     }
 
-    /* Countdown text inside SVG container area */
+    /* Countdown center */
     .countdown-center {
       position: absolute;
       bottom: 5px;
@@ -154,21 +156,288 @@
     .safe-area-pt { padding-top: max(1rem, env(safe-area-inset-top)); }
     .safe-area-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 
-    /* Theme Toggle Switch */
+    /* Theme Toggle */
     .theme-toggle {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-muted);
       backdrop-filter: blur(10px);
     }
+
+    /* ===== UPDATE BANNER ===== */
+    #update-banner {
+      position: fixed;
+      top: max(12px, env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      z-index: 60;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      background: var(--glass-active);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #update-banner.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    #update-banner .update-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    #update-banner .update-text {
+      flex: 1;
+      font-size: clamp(0.78rem, 3vw, 0.88rem);
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+    #update-banner .update-text small {
+      display: block;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.75em;
+      margin-top: 2px;
+    }
+    #update-reload-btn {
+      flex-shrink: 0;
+      padding: 7px 14px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #update-reload-btn:active { transform: scale(0.95); opacity: 0.85; }
+    #update-dismiss-btn {
+      flex-shrink: 0;
+      padding: 6px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1;
+    }
+
+    /* City Selector Button */
+    #city-selector-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #city-selector-btn:active { opacity: 0.7; }
+    #city-selector-btn .chevron {
+      transition: transform 0.3s ease;
+      color: var(--text-muted);
+    }
+    #city-selector-btn.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* City name animation */
+    #city-name-display {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    #city-name-display.changing {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    /* ===== BOTTOM SHEET ===== */
+    #city-sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #city-sheet.visible {
+      pointer-events: all;
+      opacity: 1;
+    }
+
+    #city-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    #city-panel {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--sheet-bg);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border-top: 1px solid var(--glass-border);
+      border-radius: 24px 24px 0 0;
+      max-height: 78vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.15);
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    }
+    #city-panel.open {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--text-muted);
+      opacity: 0.35;
+      margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+
+    .sheet-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.1rem, 4vw, 1.3rem);
+      font-weight: 800;
+      color: var(--text-main);
+      text-align: center;
+      padding: 12px 20px 8px;
+      flex-shrink: 0;
+    }
+
+    /* Search Input */
+    .city-search-wrapper {
+      padding: 0 16px 12px;
+      flex-shrink: 0;
+    }
+    #city-search {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border-radius: 14px;
+      border: 1px solid var(--glass-border);
+      background: var(--input-bg);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s ease;
+    }
+    #city-search:focus {
+      border-color: var(--accent);
+    }
+    #city-search::placeholder {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .search-icon-wrap {
+      position: relative;
+    }
+    .search-icon-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+    }
+
+    /* City List */
+    #city-list {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    #city-list::-webkit-scrollbar { display: none; }
+
+    .city-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 12px;
+      border-radius: 14px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+      color: var(--text-main);
+      transition: background 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .city-item:active {
+      background: var(--glass-bg);
+      transform: scale(0.98);
+    }
+    .city-item.selected {
+      background: var(--glass-active);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .city-item .checkmark {
+      display: none;
+      color: var(--accent);
+    }
+    .city-item.selected .checkmark {
+      display: block;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: none;
+    }
   </style>
 </head>
 <body class="safe-area-pt safe-area-pb">
 
+  <!-- Update Banner -->
+  <div id="update-banner" role="alert" aria-live="polite">
+    <span class="update-icon">🔄</span>
+    <div class="update-text">
+      Yeni güncelleme hazır
+      <small>Yenilemeden önce veriler korunur</small>
+    </div>
+    <button id="update-reload-btn" onclick="applyUpdate()">Yenile</button>
+    <button id="update-dismiss-btn" onclick="dismissUpdate()" aria-label="Kapat">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
   <!-- Offline Overlay -->
   <div id="offline-overlay" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-center" style="background: var(--bg-bot); backdrop-filter: blur(10px);">
     <div class="glass-panel p-8 rounded-2xl max-w-sm flex flex-col items-center">
-      <svg class="w-16 h-16 mb-4" style="color: var(--accent)" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <svg class="w-16 h-16 mb-4" style="color: var(--accent)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
       </svg>
       <h2 class="text-big font-bold mb-2 outfit-font" style="color: var(--text-main)">İnternet Bağlantısı Gerekli</h2>
@@ -177,11 +446,31 @@
     </div>
   </div>
 
-  <!-- Watermark -->
-  <svg class="izmir-bg" viewBox="0 0 200 600" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
-    <path d="M80,600 L80,200 L70,200 L70,180 L80,180 L80,150 L100,100 L120,150 L120,180 L130,180 L130,200 L120,200 L120,600 Z" fill="currentColor"/>
-    <circle cx="100" cy="165" r="8" fill="transparent" stroke="currentColor" stroke-width="2"/>
-    <rect x="90" y="220" width="20" height="300" fill="currentColor" opacity="0.5"/>
+  <!-- Mosque Watermark SVG -->
+  <svg class="mosque-bg" viewBox="0 0 200 400" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
+    <!-- Main dome -->
+    <ellipse cx="100" cy="140" rx="45" ry="35" fill="currentColor"/>
+    <!-- Minaret left -->
+    <rect x="42" y="80" width="12" height="120" fill="currentColor"/>
+    <ellipse cx="48" cy="80" rx="6" ry="10" fill="currentColor"/>
+    <rect x="46" y="70" width="4" height="12" fill="currentColor"/>
+    <!-- Minaret right -->
+    <rect x="146" y="80" width="12" height="120" fill="currentColor"/>
+    <ellipse cx="152" cy="80" rx="6" ry="10" fill="currentColor"/>
+    <rect x="150" y="70" width="4" height="12" fill="currentColor"/>
+    <!-- Main building body -->
+    <rect x="55" y="170" width="90" height="80" fill="currentColor"/>
+    <!-- Arched door -->
+    <rect x="88" y="210" width="24" height="40" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M88,210 A12,12 0 0,1 112,210" fill="none" stroke="currentColor" stroke-width="2"/>
+    <!-- Side arched windows -->
+    <rect x="65" y="185" width="16" height="22" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
+    <rect x="119" y="185" width="16" height="22" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
+    <!-- Ground -->
+    <rect x="30" y="250" width="140" height="150" fill="currentColor"/>
+    <!-- Steps -->
+    <rect x="70" y="246" width="60" height="6" fill="currentColor"/>
+    <rect x="78" y="242" width="44" height="5" fill="currentColor"/>
   </svg>
 
   <div class="relative z-10 flex flex-col h-full w-full max-w-md mx-auto px-4 lg:max-w-lg mt-4">
@@ -189,17 +478,21 @@
     <!-- HEADER -->
     <header class="flex justify-between items-start shrink-0 mb-4">
       <div class="flex flex-col">
-        <h1 class="text-big font-black tracking-widest outfit-font uppercase" style="color: var(--text-main)">İzmir</h1>
+        <!-- Clickable city name -->
+        <button id="city-selector-btn" aria-label="Şehir seç" aria-haspopup="dialog">
+          <h1 id="city-name-display" class="text-big font-black tracking-widest outfit-font uppercase" style="color: var(--text-main)">İzmir</h1>
+          <svg class="chevron w-5 h-5 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
         <span id="gregorian-date" class="text-med font-bold" style="color: var(--text-muted)">-- ---- ----</span>
       </div>
       
-      <!-- Theme Toggle Switch -->
-      <button id="theme-switch" class="theme-toggle flex items-center justify-center p-2 rounded-full shadow-sm active:scale-95 transition-transform mt-1">
-        <!-- Sun Icon (Default) -->
+      <!-- Theme Toggle -->
+      <button id="theme-switch" class="theme-toggle flex items-center justify-center p-2 rounded-full shadow-sm active:scale-95 transition-transform mt-1" aria-label="Tema değiştir">
         <svg id="theme-icon-light" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <!-- Moon Icon (Hidden by default) -->
         <svg id="theme-icon-dark" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
@@ -215,14 +508,8 @@
     <main class="w-full shrink-0 flex-1 flex flex-col justify-center min-h-[30vh]">
       <div class="svg-arc-wrapper">
         <svg class="arc-svg" viewBox="0 0 200 110" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
-          <!-- The exact tracking line -->
-          <!-- Radius = 90, Center = 100,100 -->
           <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="var(--arc-stroke)" stroke-dasharray="2 3" stroke-width="1.5" stroke-linecap="round"/>
-          
-          <!-- Nodes injected via JS -->
           <g id="svg-nodes"></g>
-          
-          <!-- Sun/Moon Icon wrapper moving mathematically on the path -->
           <g id="sun-wrapper" transform="translate(100, 10)">
             <svg id="arc-sun-icon" x="-10" y="-10" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5" fill="var(--accent)"></circle>
@@ -238,11 +525,9 @@
           </g>
         </svg>
 
-        <!-- Countdown perfectly centered -->
+        <!-- Countdown -->
         <div class="countdown-center flex flex-col items-center">
-          <h2 id="upcoming-prayer-name" class="text-huge font-black uppercase outfit-font mb-1" style="color: var(--text-main); letter-spacing: 2px;">
-            --
-          </h2>
+          <h2 id="upcoming-prayer-name" class="text-huge font-black uppercase outfit-font mb-1" style="color: var(--text-main); letter-spacing: 2px;">--</h2>
           <div class="flex items-baseline gap-1">
             <span id="hour-value" class="text-massive font-black tabular-nums outfit-font" style="color: var(--text-main)">00</span>
             <span class="text-med font-bold mx-1" style="color: var(--text-muted)">:</span>
@@ -255,41 +540,146 @@
       </div>
     </main>
 
-    <!-- LIST SECTION (BOTTOM) -->
+    <!-- LIST SECTION -->
     <section class="flex-1 flex flex-col justify-end pb-4 gap-2 shrink-0">
-      <div id="prayer-list-container" class="grid grid-cols-1 gap-2 sm:gap-3">
-        <!-- JS generates items -->
-      </div>
+      <div id="prayer-list-container" class="grid grid-cols-1 gap-2 sm:gap-3"></div>
     </section>
+  </div>
 
+
+  <!-- ===== CITY PICKER BOTTOM SHEET ===== -->
+  <div id="city-sheet" role="dialog" aria-modal="true" aria-label="Şehir seçimi">
+    <div id="city-backdrop"></div>
+    <div id="city-panel">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Şehir Seç</div>
+      
+      <div class="city-search-wrapper">
+        <div class="search-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input id="city-search" type="search" placeholder="Şehir ara..." autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+      </div>
+
+      <div id="city-list" role="listbox">
+        <!-- Populated by JS -->
+      </div>
+      <div id="no-results" class="no-results">Şehir bulunamadı 🔍</div>
+    </div>
   </div>
 
 
   <script>
+    // ===== DATA =====
     const PRAYER_NAMES = ["Imsak", "Gunes", "Ogle", "Ikindi", "Aksam", "Yatsi"];
     const PRAYER_DISPLAY = { Imsak: "İmsak", Gunes: "Güneş", Ogle: "Öğle", Ikindi: "İkindi", Aksam: "Akşam", Yatsi: "Yatsı" };
-    
+
+    // 81 Turkish provinces — display name + Aladhan API key
+    const CITIES = [
+      { name: "Adana", key: "Adana" },
+      { name: "Adıyaman", key: "Adiyaman" },
+      { name: "Afyonkarahisar", key: "Afyonkarahisar" },
+      { name: "Ağrı", key: "Agri" },
+      { name: "Aksaray", key: "Aksaray" },
+      { name: "Amasya", key: "Amasya" },
+      { name: "Ankara", key: "Ankara" },
+      { name: "Antalya", key: "Antalya" },
+      { name: "Ardahan", key: "Ardahan" },
+      { name: "Artvin", key: "Artvin" },
+      { name: "Aydın", key: "Aydin" },
+      { name: "Balıkesir", key: "Balikesir" },
+      { name: "Bartın", key: "Bartin" },
+      { name: "Batman", key: "Batman" },
+      { name: "Bayburt", key: "Bayburt" },
+      { name: "Bilecik", key: "Bilecik" },
+      { name: "Bingöl", key: "Bingol" },
+      { name: "Bitlis", key: "Bitlis" },
+      { name: "Bolu", key: "Bolu" },
+      { name: "Burdur", key: "Burdur" },
+      { name: "Bursa", key: "Bursa" },
+      { name: "Çanakkale", key: "Canakkale" },
+      { name: "Çankırı", key: "Cankiri" },
+      { name: "Çorum", key: "Corum" },
+      { name: "Denizli", key: "Denizli" },
+      { name: "Diyarbakır", key: "Diyarbakir" },
+      { name: "Düzce", key: "Duzce" },
+      { name: "Edirne", key: "Edirne" },
+      { name: "Elazığ", key: "Elazig" },
+      { name: "Erzincan", key: "Erzincan" },
+      { name: "Erzurum", key: "Erzurum" },
+      { name: "Eskişehir", key: "Eskisehir" },
+      { name: "Gaziantep", key: "Gaziantep" },
+      { name: "Giresun", key: "Giresun" },
+      { name: "Gümüşhane", key: "Gumushane" },
+      { name: "Hakkari", key: "Hakkari" },
+      { name: "Hatay", key: "Hatay" },
+      { name: "Iğdır", key: "Igdir" },
+      { name: "Isparta", key: "Isparta" },
+      { name: "İstanbul", key: "Istanbul" },
+      { name: "İzmir", key: "Izmir" },
+      { name: "Kahramanmaraş", key: "Kahramanmaras" },
+      { name: "Karabük", key: "Karabuk" },
+      { name: "Karaman", key: "Karaman" },
+      { name: "Kars", key: "Kars" },
+      { name: "Kastamonu", key: "Kastamonu" },
+      { name: "Kayseri", key: "Kayseri" },
+      { name: "Kırıkkale", key: "Kirikkale" },
+      { name: "Kırklareli", key: "Kirklareli" },
+      { name: "Kırşehir", key: "Kirsehir" },
+      { name: "Kilis", key: "Kilis" },
+      { name: "Kocaeli", key: "Kocaeli" },
+      { name: "Konya", key: "Konya" },
+      { name: "Kütahya", key: "Kutahya" },
+      { name: "Malatya", key: "Malatya" },
+      { name: "Manisa", key: "Manisa" },
+      { name: "Mardin", key: "Mardin" },
+      { name: "Mersin", key: "Mersin" },
+      { name: "Muğla", key: "Mugla" },
+      { name: "Muş", key: "Mus" },
+      { name: "Nevşehir", key: "Nevsehir" },
+      { name: "Niğde", key: "Nigde" },
+      { name: "Ordu", key: "Ordu" },
+      { name: "Osmaniye", key: "Osmaniye" },
+      { name: "Rize", key: "Rize" },
+      { name: "Sakarya", key: "Sakarya" },
+      { name: "Samsun", key: "Samsun" },
+      { name: "Şanlıurfa", key: "Sanliurfa" },
+      { name: "Siirt", key: "Siirt" },
+      { name: "Sinop", key: "Sinop" },
+      { name: "Şırnak", key: "Sirnak" },
+      { name: "Sivas", key: "Sivas" },
+      { name: "Tekirdağ", key: "Tekirdag" },
+      { name: "Tokat", key: "Tokat" },
+      { name: "Trabzon", key: "Trabzon" },
+      { name: "Tunceli", key: "Tunceli" },
+      { name: "Uşak", key: "Usak" },
+      { name: "Van", key: "Van" },
+      { name: "Yalova", key: "Yalova" },
+      { name: "Yozgat", key: "Yozgat" },
+      { name: "Zonguldak", key: "Zonguldak" }
+    ];
+
+    // ===== STATE =====
+    let selectedCity = { name: "İzmir", key: "Izmir" };
     let currentTimes = null;
     let hijriStr = "-- ------ ----";
     let isDarkMode = false;
-    
-    function getNow() {
-      return new Date();
-    }
 
-    // Math/SVG Config
+    function getNow() { return new Date(); }
+
+    // Arc Math Config
     const ARC_RADIUS = 90;
     const ARC_CENTER_X = 100;
     const ARC_CENTER_Y = 100;
-    
-    // Angles for the SVG path. PI is left (-x), 0 is right (+x).
     const NODE_ANGLES = {
-      Imsak: Math.PI,          // 180 degrees (Left)
-      Gunes: Math.PI * 0.8,
-      Ogle:  Math.PI * 0.6,
-      Ikindi:Math.PI * 0.4,
-      Aksam: Math.PI * 0.2,
-      Yatsi: 0                 // 0 degrees (Right)
+      Imsak:  Math.PI,
+      Gunes:  Math.PI * 0.8,
+      Ogle:   Math.PI * 0.6,
+      Ikindi: Math.PI * 0.4,
+      Aksam:  Math.PI * 0.2,
+      Yatsi:  0
     };
 
     function parseTime(timeStr, dateObj) {
@@ -299,83 +689,83 @@
       return d;
     }
 
+    function cacheKey() {
+      return `ezanTimings_${selectedCity.key}_V3`;
+    }
+
     async function loadData() {
       const realNow = new Date();
       const fDay = `${String(realNow.getDate()).padStart(2,'0')}-${String(realNow.getMonth()+1).padStart(2,'0')}-${realNow.getFullYear()}`;
       
       let needsFetch = true;
       try {
-        const stored = localStorage.getItem('ezanIzmirTimingsV2');
-        if(stored) {
+        const stored = localStorage.getItem(cacheKey());
+        if (stored) {
           const parsed = JSON.parse(stored);
-          if(parsed[fDay]) {
+          if (parsed[fDay]) {
             currentTimes = parsed[fDay];
-            if(currentTimes.hijri) hijriStr = currentTimes.hijri;
+            if (currentTimes.hijri) hijriStr = currentTimes.hijri;
             needsFetch = false;
           }
         }
-      } catch(e){}
+      } catch(e) {}
 
       if (needsFetch) {
         try {
-          const res = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Izmir&country=Turkey&method=13');
+          const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(selectedCity.key)}&country=Turkey&method=13`);
           if (!res.ok) throw new Error("Network response was not ok");
           const json = await res.json();
           const t = json.data.timings;
           
           currentTimes = {
-            Imsak: t.Fajr,
-            Gunes: t.Sunrise,
-            Ogle: t.Dhuhr,
+            Imsak:  t.Fajr,
+            Gunes:  t.Sunrise,
+            Ogle:   t.Dhuhr,
             Ikindi: t.Asr,
-            Aksam: t.Maghrib,
-            Yatsi: t.Isha
+            Aksam:  t.Maghrib,
+            Yatsi:  t.Isha
           };
           
-          // Format hijri using Turkish transliteration map roughly corresponding to Aladhan's En transliteration
           const h = json.data.date.hijri;
           const trMonths = {
             "Muharram": "Muharrem", "Safar": "Safer", "Rabi' al-Awwal": "Rebiülevvel",
             "Rabi' al-Thani": "Rebiülahir", "Jumada al-Ula": "Cemaziyelevvel",
             "Jumada al-Akhirah": "Cemaziyelahir", "Rajab": "Recep", "Sha'ban": "Şaban",
             "Ramadan": "Ramazan", "Shawwal": "Şevval", "Dhu al-Qi'dah": "Zilkade",
-            "Dhu al-Hijjah": "Zilhicce", "Muḥarram": "Muharrem" // Aladhan sometimes uses unicode
+            "Dhu al-Hijjah": "Zilhicce", "Muḥarram": "Muharrem"
           };
           const trMonth = trMonths[h.month.en] || h.month.en;
           hijriStr = `${h.day} ${trMonth} ${h.year}`;
           currentTimes.hijri = hijriStr;
           
-          // Save to localStorage
           try {
-            const stored = JSON.parse(localStorage.getItem('ezanIzmirTimingsV2') || "{}");
+            const stored = JSON.parse(localStorage.getItem(cacheKey()) || "{}");
             stored[fDay] = currentTimes;
-            localStorage.setItem('ezanIzmirTimingsV2', JSON.stringify(stored));
-          } catch(e){}
+            localStorage.setItem(cacheKey(), JSON.stringify(stored));
+          } catch(e) {}
           
         } catch(err) {
-          // Fetch failed (likely offline).
           document.getElementById('offline-overlay').classList.remove('hidden');
           document.getElementById('offline-overlay').classList.add('flex');
-          return; // Stop initialization
+          return;
         }
       }
 
       document.getElementById('hijri-date').textContent = hijriStr;
-      document.getElementById('gregorian-date').textContent = `${realNow.getDate()} ${["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"][realNow.getMonth()]} ${realNow.getFullYear()}`;
+      const months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+      document.getElementById('gregorian-date').textContent = `${realNow.getDate()} ${months[realNow.getMonth()]} ${realNow.getFullYear()}`;
       
       initArc();
       renderList();
     }
 
-    // --- Perfect SVG Arc Initializer ---
     function initArc() {
       const svgNodes = document.getElementById('svg-nodes');
       svgNodes.innerHTML = '';
       PRAYER_NAMES.forEach(p => {
         const angle = NODE_ANGLES[p];
-        const x = ARC_CENTER_X + (Math.cos(angle) * ARC_RADIUS); 
-        const y = ARC_CENTER_Y - (Math.sin(angle) * ARC_RADIUS); // y is inverted in SVG
-        
+        const x = ARC_CENTER_X + (Math.cos(angle) * ARC_RADIUS);
+        const y = ARC_CENTER_Y - (Math.sin(angle) * ARC_RADIUS);
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("id", `svg-node-${p}`);
         circle.setAttribute("cx", x);
@@ -401,9 +791,8 @@
       });
     }
 
-    // --- Engine ---
     function update() {
-      if(!currentTimes) return;
+      if (!currentTimes) return;
       const now = getNow();
       document.getElementById('digital-clock').textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
@@ -415,7 +804,7 @@
       const dates = {};
       PRAYER_NAMES.forEach(p => dates[p] = parseTime(currentTimes[p], now));
 
-      for (let i=0; i<PRAYER_NAMES.length; i++) {
+      for (let i = 0; i < PRAYER_NAMES.length; i++) {
         const p = PRAYER_NAMES[i];
         if (now < dates[p]) {
           nextPrayer = p;
@@ -434,7 +823,6 @@
         prevDate = dates["Yatsi"];
       }
 
-      // Update Countdown & Typography updates
       const diffMs = nextDate.getTime() - now.getTime();
       const totalSec = Math.max(0, Math.floor(diffMs / 1000));
       document.getElementById('upcoming-prayer-name').textContent = PRAYER_DISPLAY[nextPrayer];
@@ -443,7 +831,6 @@
       document.getElementById('minute-value').textContent = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
       document.getElementById('second-value').textContent = String(totalSec % 60).padStart(2, '0');
 
-      // Update List and SVG Nodes
       PRAYER_NAMES.forEach(p => {
         const node = document.getElementById(`svg-node-${p}`);
         const row = document.getElementById(`list-row-${p}`);
@@ -462,40 +849,29 @@
           row.classList.remove('glass-active');
           nameEl.style.color = 'var(--text-muted)';
           timeEl.style.color = 'var(--text-main)';
-          
-          if(now > dates[p]) {
-            row.style.opacity = '0.4';
-          } else {
-            row.style.opacity = '1';
-          }
+          row.style.opacity = now > dates[p] ? '0.4' : '1';
         }
       });
 
-      // Flawless Arc Math SVG Transformation
+      // Arc sun/moon position
       const totalPeriod = nextDate.getTime() - prevDate.getTime();
       const elapsed = now.getTime() - prevDate.getTime();
       const progress = Math.max(0, Math.min(1, elapsed / totalPeriod));
-
       const angleStart = NODE_ANGLES[prevPrayer];
       const angleEnd = NODE_ANGLES[nextPrayer];
-      
       let currentAngle;
       if (prevPrayer === "Yatsi" && nextPrayer === "Imsak") {
-         currentAngle = 0 + (Math.PI * progress);
+        currentAngle = 0 + (Math.PI * progress);
       } else {
-         currentAngle = angleStart - ((angleStart - angleEnd) * progress);
+        currentAngle = angleStart - ((angleStart - angleEnd) * progress);
       }
-
       const x = ARC_CENTER_X + (Math.cos(currentAngle) * ARC_RADIUS);
-      const y = ARC_CENTER_Y - (Math.sin(currentAngle) * ARC_RADIUS); // y inverted for SVG
+      const y = ARC_CENTER_Y - (Math.sin(currentAngle) * ARC_RADIUS);
+      document.getElementById('sun-wrapper').setAttribute('transform', `translate(${x}, ${y})`);
 
-      const sunWrapper = document.getElementById('sun-wrapper');
-      sunWrapper.setAttribute('transform', `translate(${x}, ${y})`);
-
-      // Time-based Sun/Moon Icon
       const isNightTime = now < dates["Gunes"] || now >= dates["Aksam"];
       const arcSunIcon = document.getElementById('arc-sun-icon');
-      if(isNightTime) {
+      if (isNightTime) {
         arcSunIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="var(--accent)"></path>`;
       } else {
         arcSunIcon.innerHTML = `
@@ -512,48 +888,206 @@
       }
     }
 
-    // Theme Toggle Logic
-    const themeBtn = document.getElementById('theme-switch');
-    const iconLight = document.getElementById('theme-icon-light');
-    const iconDark = document.getElementById('theme-icon-dark');
-    const arcSunIcon = document.getElementById('arc-sun-icon');
-
+    // ===== THEME =====
     function toggleTheme(save = true) {
       isDarkMode = !isDarkMode;
-      if(isDarkMode) {
+      if (isDarkMode) {
         document.documentElement.setAttribute('data-theme', 'dark');
         document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0f172a');
-        iconLight.classList.add('hidden');
-        iconDark.classList.remove('hidden');
+        document.getElementById('theme-icon-light').classList.add('hidden');
+        document.getElementById('theme-icon-dark').classList.remove('hidden');
       } else {
         document.documentElement.removeAttribute('data-theme');
         document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f8fafc');
-        iconLight.classList.remove('hidden');
-        iconDark.classList.add('hidden');
+        document.getElementById('theme-icon-light').classList.remove('hidden');
+        document.getElementById('theme-icon-dark').classList.add('hidden');
       }
-      if(save) localStorage.setItem('ezanTheme', isDarkMode ? 'dark' : 'light');
+      if (save) localStorage.setItem('ezanTheme', isDarkMode ? 'dark' : 'light');
     }
 
-    themeBtn.addEventListener('click', () => toggleTheme(true));
+    document.getElementById('theme-switch').addEventListener('click', () => toggleTheme(true));
 
+    // ===== CITY PICKER =====
+    const citySheet = document.getElementById('city-sheet');
+    const cityPanel = document.getElementById('city-panel');
+    const cityBackdrop = document.getElementById('city-backdrop');
+    const citySearch = document.getElementById('city-search');
+    const cityListEl = document.getElementById('city-list');
+    const noResults = document.getElementById('no-results');
+    const citySelectorBtn = document.getElementById('city-selector-btn');
+    const cityNameDisplay = document.getElementById('city-name-display');
+
+    let sheetOpen = false;
+
+    function openCitySheet() {
+      sheetOpen = true;
+      citySheet.classList.add('visible');
+      requestAnimationFrame(() => {
+        cityPanel.classList.add('open');
+      });
+      citySelectorBtn.classList.add('open');
+      citySearch.value = '';
+      renderCityList('');
+      setTimeout(() => citySearch.focus(), 350);
+    }
+
+    function closeCitySheet() {
+      sheetOpen = false;
+      cityPanel.classList.remove('open');
+      citySelectorBtn.classList.remove('open');
+      setTimeout(() => {
+        citySheet.classList.remove('visible');
+      }, 350);
+    }
+
+    function renderCityList(filter) {
+      const q = filter.toLowerCase().trim();
+      const filtered = q
+        ? CITIES.filter(c => c.name.toLowerCase().includes(q))
+        : CITIES;
+      
+      cityListEl.innerHTML = '';
+      
+      if (filtered.length === 0) {
+        noResults.style.display = 'block';
+        return;
+      }
+      noResults.style.display = 'none';
+
+      filtered.forEach(city => {
+        const item = document.createElement('div');
+        item.className = 'city-item' + (city.key === selectedCity.key ? ' selected' : '');
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', city.key === selectedCity.key ? 'true' : 'false');
+        item.innerHTML = `
+          <span>${city.name}</span>
+          <svg class="checkmark w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+        item.addEventListener('click', () => selectCity(city));
+        cityListEl.appendChild(item);
+      });
+    }
+
+    async function selectCity(city) {
+      if (city.key === selectedCity.key) {
+        closeCitySheet();
+        return;
+      }
+
+      selectedCity = city;
+      localStorage.setItem('ezanSelectedCity', JSON.stringify(city));
+
+      // Animate city name change
+      cityNameDisplay.classList.add('changing');
+      setTimeout(() => {
+        cityNameDisplay.textContent = city.name.toUpperCase();
+        document.title = `Ezan Vakitleri — ${city.name}`;
+        cityNameDisplay.classList.remove('changing');
+      }, 200);
+
+      closeCitySheet();
+
+      // Reset and reload data
+      currentTimes = null;
+      hijriStr = "-- ------ ----";
+      document.getElementById('hijri-date').textContent = hijriStr;
+      document.getElementById('prayer-list-container').innerHTML = '';
+      document.getElementById('upcoming-prayer-name').textContent = '--';
+      document.getElementById('target-prayer-time').textContent = 'Sonraki Vakit: --:--';
+
+      await loadData();
+      update();
+    }
+
+    citySelectorBtn.addEventListener('click', openCitySheet);
+    cityBackdrop.addEventListener('click', closeCitySheet);
+    citySearch.addEventListener('input', (e) => renderCityList(e.target.value));
+
+    // Swipe down to close (touch gesture)
+    let touchStartY = 0;
+    cityPanel.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    cityPanel.addEventListener('touchend', (e) => {
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (dy > 80) closeCitySheet();
+    }, { passive: true });
+
+    // Escape key to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sheetOpen) closeCitySheet();
+    });
+
+    // ===== INIT =====
     let intervalId;
-    window.addEventListener('DOMContentLoaded', () => { 
+    window.addEventListener('DOMContentLoaded', () => {
       // Load saved theme
       const savedTheme = localStorage.getItem('ezanTheme');
-      if(savedTheme === 'dark') {
-        toggleTheme(false); // sets to dark without saving again
-      }
+      if (savedTheme === 'dark') toggleTheme(false);
+
+      // Load saved city
+      try {
+        const savedCity = JSON.parse(localStorage.getItem('ezanSelectedCity'));
+        if (savedCity && savedCity.key && savedCity.name) {
+          selectedCity = savedCity;
+          cityNameDisplay.textContent = savedCity.name.toUpperCase();
+          document.title = `Ezan Vakitleri — ${savedCity.name}`;
+        }
+      } catch(e) {}
 
       loadData().then(() => {
         update();
         intervalId = setInterval(update, 1000);
       });
       
-      // Register Service Worker for PWA
+      // ===== SERVICE WORKER + UPDATE DETECTION =====
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-          .then(registration => console.log('Service Worker registered:', registration))
-          .catch(error => console.log('Service Worker registration failed:', error));
+        let swRegistration = null;
+
+        function showUpdateBanner() {
+          document.getElementById('update-banner').classList.add('show');
+        }
+
+        window.applyUpdate = function() {
+          if (swRegistration && swRegistration.waiting) {
+            // Tell the waiting SW to take control immediately
+            swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        };
+
+        window.dismissUpdate = function() {
+          document.getElementById('update-banner').classList.remove('show');
+        };
+
+        // When SW takes control, reload to get fresh assets
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          window.location.reload();
+        });
+
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          swRegistration = reg;
+          console.log('SW registered:', reg.scope);
+
+          // Case 1: An update was found and is already waiting (user revisited tab)
+          if (reg.waiting) {
+            showUpdateBanner();
+          }
+
+          // Case 2: Update found while page is open
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New SW installed but old one still in control — prompt user
+                showUpdateBanner();
+              }
+            });
+          });
+
+          // Case 3: Periodically check for updates (every 60 min)
+          setInterval(() => reg.update(), 60 * 60 * 1000);
+
+        }).catch(err => console.log('SW registration failed:', err));
       }
     });
   </script>
