@@ -480,7 +480,7 @@
       <div class="flex flex-col">
         <!-- Clickable city name -->
         <button id="city-selector-btn" aria-label="Şehir seç" aria-haspopup="dialog">
-          <h1 id="city-name-display" class="text-big font-black tracking-widest outfit-font uppercase" style="color: var(--text-main)">İzmir</h1>
+          <h1 id="city-name-display" class="text-big font-black tracking-widest outfit-font" style="color: var(--text-main)">İZMİR</h1>
           <svg class="chevron w-5 h-5 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
@@ -576,15 +576,17 @@
     const PRAYER_NAMES = ["Imsak", "Gunes", "Ogle", "Ikindi", "Aksam", "Yatsi"];
     const PRAYER_DISPLAY = { Imsak: "İmsak", Gunes: "Güneş", Ogle: "Öğle", Ikindi: "İkindi", Aksam: "Akşam", Yatsi: "Yatsı" };
 
-    // 81 Turkish provinces — display name + Aladhan API key
+    // 81 Turkish provinces — top 3 popular cities first, then remaining sorted A-Z
     const CITIES = [
+      { name: "İzmir", key: "Izmir" },
+      { name: "İstanbul", key: "Istanbul" },
+      { name: "Ankara", key: "Ankara" },
       { name: "Adana", key: "Adana" },
       { name: "Adıyaman", key: "Adiyaman" },
       { name: "Afyonkarahisar", key: "Afyonkarahisar" },
       { name: "Ağrı", key: "Agri" },
       { name: "Aksaray", key: "Aksaray" },
       { name: "Amasya", key: "Amasya" },
-      { name: "Ankara", key: "Ankara" },
       { name: "Antalya", key: "Antalya" },
       { name: "Ardahan", key: "Ardahan" },
       { name: "Artvin", key: "Artvin" },
@@ -617,8 +619,6 @@
       { name: "Hatay", key: "Hatay" },
       { name: "Iğdır", key: "Igdir" },
       { name: "Isparta", key: "Isparta" },
-      { name: "İstanbul", key: "Istanbul" },
-      { name: "İzmir", key: "Izmir" },
       { name: "Kahramanmaraş", key: "Kahramanmaras" },
       { name: "Karabük", key: "Karabuk" },
       { name: "Karaman", key: "Karaman" },
@@ -940,10 +940,22 @@
       }, 350);
     }
 
+    // Türkçe karakter uyumlu arama ve normalizasyon
+    function normalizeTrSearch(str) {
+      return str
+        .toLocaleLowerCase('tr-TR')
+        .replace(/ğ/g, 'g')
+        .replace(/ü/g, 'u')
+        .replace(/ş/g, 's')
+        .replace(/ı/g, 'i')
+        .replace(/ö/g, 'o')
+        .replace(/ç/g, 'c');
+    }
+
     function renderCityList(filter) {
-      const q = filter.toLowerCase().trim();
+      const q = normalizeTrSearch(filter.trim());
       const filtered = q
-        ? CITIES.filter(c => c.name.toLowerCase().includes(q))
+        ? CITIES.filter(c => normalizeTrSearch(c.name).includes(q))
         : CITIES;
       
       cityListEl.innerHTML = '';
@@ -954,7 +966,13 @@
       }
       noResults.style.display = 'none';
 
-      filtered.forEach(city => {
+      filtered.forEach((city, index) => {
+        if (!q && index === 3) {
+          const divider = document.createElement('div');
+          divider.className = 'my-2.5 mx-3 border-t border-slate-300 dark:border-slate-700 opacity-50';
+          cityListEl.appendChild(divider);
+        }
+
         const item = document.createElement('div');
         item.className = 'city-item' + (city.key === selectedCity.key ? ' selected' : '');
         item.setAttribute('role', 'option');
@@ -982,7 +1000,7 @@
       // Animate city name change
       cityNameDisplay.classList.add('changing');
       setTimeout(() => {
-        cityNameDisplay.textContent = city.name.toUpperCase();
+        cityNameDisplay.textContent = city.name.toLocaleUpperCase('tr-TR');
         document.title = `Ezan Vakitleri — ${city.name}`;
         cityNameDisplay.classList.remove('changing');
       }, 200);
@@ -1030,7 +1048,7 @@
         const savedCity = JSON.parse(localStorage.getItem('ezanSelectedCity'));
         if (savedCity && savedCity.key && savedCity.name) {
           selectedCity = savedCity;
-          cityNameDisplay.textContent = savedCity.name.toUpperCase();
+          cityNameDisplay.textContent = savedCity.name.toLocaleUpperCase('tr-TR');
           document.title = `Ezan Vakitleri — ${savedCity.name}`;
         }
       } catch(e) {}
