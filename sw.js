@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ezan-vakitleri-cache-v3';
+const CACHE_NAME = 'ezan-vakitleri-cache-v4';
 
 // Allow the page to force this SW to activate immediately (update banner)
 self.addEventListener('message', (event) => {
@@ -21,7 +21,6 @@ self.addEventListener('install', (event) => {
       return cache.addAll(ASSETS);
     })
   );
-  self.skipWaiting();
 });
 
 // Activate event - Clean up old caches
